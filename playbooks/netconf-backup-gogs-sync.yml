@@ -1,0 +1,33 @@
+- name: Gogs - Get timestamp
+  shell: date
+  register: timestamp
+  delegate_to: localhost
+
+- name: Gogs - Make sure we're in the right branch
+  shell: git checkout {{git_branch|default('master')}}
+  args:
+    chdir: "{{ git_local_repository }}"
+  delegate_to: localhost
+
+- name: Gogs - Pull remote changes
+  shell: git pull http://{{gogs_userid}}:{{gogs_password}}@localhost:10080{{gogs_remote_repository}}
+  args:
+    chdir: "{{ git_local_repository }}"
+  delegate_to: localhost
+
+- name: Gogs - Check the directory status
+  shell: git status
+  args:
+    chdir: "{{ git_local_repository }}"
+  register: changes
+  delegate_to: localhost
+
+- name: Gogs - Add files, commit, and push to GitHub
+  shell: |
+    git add .
+    git commit -m "Configuration changed on {{ timestamp.stdout }}"
+    git push http://{{gogs_userid}}:{{gogs_password}}@localhost:10080{{gogs_remote_repository}}
+  args:
+    chdir: "{{ git_local_repository }}"
+  when: not("working directory clean" in changes.stdout)
+  delegate_to: localhost

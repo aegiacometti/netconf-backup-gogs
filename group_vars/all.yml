@@ -1,0 +1,6 @@
+slack_webhook: xxx/yyy/zzz
+mail_sender: xxx@xxx.com
+mail_username: xxx@xxx.com
+mail_password: xxx
+gogs_userid: xxx
+gogs_password: xxx

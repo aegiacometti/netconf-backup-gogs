@@ -1,0 +1,65 @@
+- name: F5 - Save Config
+  bigip_config:
+    provider:
+      server: "{{ ansible_host }}"
+      user: "{{ f5_user }}"
+      password: "{{ f5_pass }}"
+      validate_certs: no
+    save: true
+  delegate_to: localhost
+  register: output_save
+  ignore_errors: yes
+
+- name: F5 - Create UCS
+  bigip_command:
+    provider:
+      server: "{{ ansible_host }}"
+      user: "{{ f5_user }}"
+      password: "{{ f5_pass }}"
+      validate_certs: no
+    commands:
+       - "save sys ucs backup.ucs"
+  delegate_to: localhost
+  register: output_create
+  ignore_errors: yes
+  when: output_save.msg is not defined
+
+- name: F5 - Download the new UCS
+  bigip_ucs_fetch:
+    src: backup.ucs
+    dest: "{{ backup_dir }}/backup.ucs"
+    provider:
+      server: "{{ ansible_host }}"
+      user: "{{ f5_user }}"
+      password: "{{ f5_pass }}"
+      validate_certs: no
+  delegate_to: localhost
+  register: output_download
+  ignore_errors: yes
+  when: output_save.msg is not defined and output_save.msg is not defined
+
+- name: F5 - Change filename or delete if identical to previous backup file
+  command:
+    argv:
+      - python3
+      - scripts/netconf-backup-f5.py
+      - "{{ inventory_hostname }}"
+      - "{{ backup_dir }}"
+      - "{{ keep_local_history }}"
+      - "{{ historic_files_to_keep }}"
+  delegate_to: localhost
+  when: output_save.failed == false and output_create.failed == false and output_download.failed == false
+
+- name: F5 - Send Mail alert if host backup failed
+  vars:
+    os: "F5"
+    partial: "yes"
+  import_tasks: netconf-backup-send-mail.yml
+  when: (output_save.failed == true or output_create.failed == true or output_download.failed == true) and alert_mail == "yes"
+
+- name: F5 - Send Slack alert if host backup failed
+  vars:
+    os: "F5"
+    partial: "yes"
+  import_tasks: netconf-backup-msg-slack.yml
+  when: (output_save.failed == true or output_create.failed == true or output_download.failed == true) and alert_slack == "yes"
