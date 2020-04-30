@@ -6,6 +6,9 @@ Complete network backup setup with Ansible, Python3, Gogs (local GitHub GUI), an
 
 - Each Playbook store the configuration files locally and optionally on GitHub. *(check Optional Setup)*
 
+Check the short video<br/>
+[![Check the short video](https://img.youtube.com/vi/_ncRyy5Spqk/0.jpg)](https://www.youtube.com/watch?v=_ncRyy5Spqk)
+
 - **Local backup**:
     - Will get and store de configuration files in the ``./backup`` directory, with format "hostname-date-time".
 
