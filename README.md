@@ -1,10 +1,10 @@
 # Simple Git GUI network configuration backup with alerts for Cisco IOS, NxOS, ASA, Arista and F5
 
-Complete network backup setup with Ansible, Python3, Gogs (local GitHub GUI), and alerts via Slack and/or eMail.
+Complete network backup setup with Ansible, Python3, Gogs (local GitHub like GUI), and alerts via Slack and/or eMail.
  
 - The master Playbook ``netconfig-backup.yml`` imports the Playbooks to do everything.
 
-- Each Playbook store the configuration files locally and optionally on GitHub. *(check Optional Setup)*
+- Each Playbook store the configuration files locally and optionally on Gogs. *(check Optional Setup)*
 
 Check the short video<br/>
 [![Check the short video](https://img.youtube.com/vi/_ncRyy5Spqk/0.jpg)](https://www.youtube.com/watch?v=_ncRyy5Spqk)
@@ -33,11 +33,20 @@ Check the short video<br/>
 Pay special attention to setup the ``platform=xxx`` value of each host.
 - Customize the credentials, mail, and Slack details in the files located at ``group_vars`` directory 
 - If you will use Gogs:
-    - Deploy the docker version of Gogs in a couple of minutes from https://github.com/gogs/gogs/tree/master/docker
-    - Before starting the container replace the TCP ports, I recommend use lower ports<br/>
-    `docker run --name=gogs --volumes-from gogs-data -p 1022:22 -p 1080:3000 gogs/gogs`
-    - edit the configuration file `sudo vi /var/gogs/gogs/conf/app.ini` and change the line:
-    `EXTERNAL_URL     = http://your_server_hostname:1080/`
+    - Deploy the docker version of Gogs in a couple of minutes:
+      1. Install docker with ``sudo apt install docker.io``
+      2. Pull Gogs image with ``sudo  docker pull gogs/gogs``
+      3. Make a link from the docker image to your actual operating system so you can customize the Gogs ini config: ``sudo mkdir -p /var/gogs``
+      
+    - Start the container <br/>
+    `sudo docker run --name=gogs -p 1022:22 -p 1080:3000 -v /var/gogs:/data gogs/gogs`
+    - Open a web browser and navigate to `http://localhost:1080`
+    - Complete the web configuration of Gogs:
+      1. Database type `SQLite3`
+      2. Domain `your_Server_hostname or IP_address`
+      3. SSH port `1022`
+      4. Application URL `your_Server_hostname or IP_address:1080`
+      5. In optional configuration add the admin account
     
 ## Usage
 
@@ -51,7 +60,7 @@ Run the master Playbook with: ``ansible-playbook netconf-backup.yml``
 - To modify the number of historic file to keep locally change that variable ``historic_files_to_keep`` in the master Playbook ``netconfig-backup.yml``.
 
 - If you want the alerts to be sent when a configuration backup fail, set to **"yes"** the variables .
-"alert_mail" and/or "alert_slack" and/or "github" at the master Playbook ``netconfig-backup.yml``. And set your mail details and/or Slack webhook and/or GitHub credentials at the
+"alert_mail" and/or "alert_slack" and/or "Gogs" at the master Playbook ``netconfig-backup.yml``. And set your mail details and/or Slack webhook and/or Gogs credentials at the
 file ``group_vars/all.yml``.
 
 - If you are going to synchronize the configuration backups with Gogs:
