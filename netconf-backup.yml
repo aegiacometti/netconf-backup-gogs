@@ -9,6 +9,8 @@
 
   # Set following variables
   vars:
+    file_name: "{{inventory_hostname}}.cfg.tmp"
+
     backup_dir: "./backups"
     keep_local_history: "yes"
     historic_files_to_keep: 10
