@@ -35,6 +35,8 @@
     - "\\A[^!]*"
     - "ntp clock-period..."
     - "! Last configuration change..."
+    - "! No configuration change..."
+    - "!Time..."
 
   # Comment/delete the tasks of the platform that you are not interested in backing up the device configuration files
   tasks:
@@ -45,7 +47,7 @@
 
     - name: Cisco NxOS
       connection: network_cli
-      import_tasks: playbooks/netconf-backup-ios.yml
+      import_tasks: playbooks/netconf-backup-nxos.yml
       when: platform == 'nxos'
 
     - name: Cisco ASA

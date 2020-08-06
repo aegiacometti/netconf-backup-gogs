@@ -9,7 +9,7 @@
     clean_config: "{{ output.stdout[0]|clean_config(clean_patterns) }}"
   local_action: copy content={{clean_config}} dest={{backup_dir}}/{{file_name}}
 
-- name: Cisco IOS - Process the file
+- name: Cisco NxOS - Process the file
   command:
     argv:
       - python3

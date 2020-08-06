@@ -2,6 +2,7 @@
 isp-internet ansible_host=10.0.14.1 ansible_network_os=ios platform=ios
 hq-core ansible_host=10.0.12.2 ansible_network_os=ios platform=ios
 #hq-access ansible_host=10.0.13.2 ansible_network_os=eos platform=eos
+hq-nx ansible_host=10.100.13.2 ansible_network_os=nxos platform=nxos
 
 [firewall]
 #vpn-bkp ansible_host=10.100.10.1 ansible_network_os=asa ansible_become=yes ansible_become_method=enable platform=asa
