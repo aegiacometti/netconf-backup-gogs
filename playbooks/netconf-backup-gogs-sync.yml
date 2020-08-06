@@ -10,7 +10,7 @@
   delegate_to: localhost
 
 - name: Gogs - Pull remote changes
-  shell: git pull http://{{gogs_userid}}:{{gogs_password}}@localhost:10080{{gogs_remote_repository}}
+  shell: git pull http://{{gogs_userid}}:{{gogs_password}}@localhost:1080{{gogs_remote_repository}}
   args:
     chdir: "{{ git_local_repository }}"
   delegate_to: localhost
@@ -26,7 +26,7 @@
   shell: |
     git add .
     git commit -m "Configuration changed on {{ timestamp.stdout }}"
-    git push http://{{gogs_userid}}:{{gogs_password}}@localhost:10080{{gogs_remote_repository}}
+    git push http://{{gogs_userid}}:{{gogs_password}}@localhost:1080{{gogs_remote_repository}}
   args:
     chdir: "{{ git_local_repository }}"
   when: not("working directory clean" in changes.stdout)
