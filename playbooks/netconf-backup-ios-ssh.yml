@@ -1,16 +1,16 @@
-- name: Cisco ASA - show running-config
-  asa_command:
+- name: Cisco IOS SSH - show running-config
+  ios_command:
     commands: 'show running-config'
   register: output
   ignore_errors: yes
 
-- name: Cisco ASA - Save the output
+- name: Cisco IOS SSH - Save the output
   vars:
     clean_config: "{{ output.stdout[0]|clean_config(clean_patterns) }}"
   local_action: copy content={{clean_config}} dest={{backup_dir}}/{{file_name}}
   ignore_errors: yes
 
-- name: Cisco ASA - Process the file
+- name: Cisco IOS SSH - Process the file
   command:
     argv:
       - python3
@@ -24,16 +24,16 @@
   when: output.failed == false
   ignore_errors: yes
 
-- name: Cisco ASA - Send Mail alert if host backup failed
+- name: Cisco IOS SSH - Send Mail alert if host backup failed
   vars:
-    os: "Cisco ASA"
-    partial: "yes"
+    os: "Cisco IOS SSH"
+    step: "fail"
   import_tasks: netconf-backup-send-mail.yml
   when: output.failed == true and alert_mail == "yes"
 
-- name: Cisco IOS - Send Slack alert if host backup failed
+- name: Cisco IOS SSH - Send Slack alert if host backup failed
   vars:
-    os: "Cisco ASA"
-    partial: "yes"
+    os: "Cisco IOS SSH"
+    step: "fail"
   import_tasks: netconf-backup-msg-slack.yml
   when: output.failed == true and alert_slack == "yes"

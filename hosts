@@ -1,11 +1,34 @@
-[network]
-isp-internet ansible_host=10.0.14.1 ansible_network_os=ios platform=ios
+[ad]
+ad-srv ansible_host=10.101.201.5 ansible_port=5985 ansible_connection=winrm ansible_winrm_transport=ntlm platform=win
+
+[windows]
+srv-ad ansible_host=10.101.201.5 ansible_port=5985 ansible_connection=winrm ansible_winrm_transport=ntlm platform=win
+local-dc-srv ansible_host=10.100.200.5 ansible_port=5985 ansible_connection=winrm ansible_winrm_transport=ntlm platform=win
+cloud-app ansible_host=10.254.254.5 ansible_port=5985 ansible_connection=winrm ansible_winrm_transport=ntlm platform=win
+ad-srv ansible_host=10.101.201.5 ansible_port=5985 ansible_connection=winrm ansible_winrm_transport=ntlm platform=win
+local-app ansible_host=10.100.200.5 ansible_port=5985 ansible_connection=winrm ansible_winrm_transport=ntlm platform=win
+
+[mpls]
 hq-core ansible_host=10.0.12.2 ansible_network_os=ios platform=ios
-#hq-access ansible_host=10.0.13.2 ansible_network_os=eos platform=eos
+isp-internet ansible_host=10.0.14.1 ansible_network_os=ios platform=ios
+
+
+[linux]
+
+[network]
+isp-pe-1 ansible_host=10.0.12.1 ansible_network_os=ios platform=ios
+hq-core ansible_host=10.0.12.2 ansible_network_os=ios platform=ios
+isp-internet ansible_host=10.0.14.1 ansible_network_os=ios platform=ios
+branch-co-1 ansible_host=10.0.13.2 ansible_network_os=ios platform=ios
+hq-access-1 ansible_host=10.100.12.2 ansible_network_os=ios platform=ios
+hq-access-1-telnet ansible_host=10.100.12.2 ansible_network_os=ios platform=telnet
+branch-1-access-1 ansible_host=10.101.23.2 ansible_network_os=ios platform=ios
 hq-nx ansible_host=10.100.13.2 ansible_network_os=nxos platform=nxos
 
 [firewall]
-#vpn-bkp ansible_host=10.100.10.1 ansible_network_os=asa ansible_become=yes ansible_become_method=enable platform=asa
+vpn-bkp ansible_host=10.100.10.1 ansible_network_os=asa platform=asa
 
 [f5]
-#f5-bigip ansible_host=10.100.201.51 platform=f5
+f5-bigip ansible_host=10.100.201.51 platform=f5
+
+#Time of push DB: 2019-12-19 12:54:42.593397

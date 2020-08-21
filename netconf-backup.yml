@@ -3,7 +3,7 @@
 # -l xxx limit the playbook to the specified hosts
 #
 ---
-- name: Network configuration backup - IOS ASA NxOS EOS F5
+- name: Network configuration backup - IOS ASA NxOS EOS F5 FortiOS
   hosts: all
   gather_facts: false
 
@@ -40,10 +40,15 @@
 
   # Comment/delete the tasks of the platform that you are not interested in backing up the device configuration files
   tasks:
-    - name: Cisco IOS
+    - name: Cisco IOS - SSH
       connection: network_cli
-      import_tasks: playbooks/netconf-backup-ios.yml
+      import_tasks: playbooks/netconf-backup-ios-ssh.yml
       when: platform == 'ios'
+
+    - name: Cisco IOS - Telnet
+      connection: network_cli
+      import_tasks: playbooks/netconf-backup-ios-telnet.yml
+      when: platform == 'telnet'
 
     - name: Cisco NxOS
       connection: network_cli
@@ -55,7 +60,7 @@
       import_tasks: playbooks/netconf-backup-asa.yml
       when: platform == 'asa'
 
-    - name: Arista
+    - name: Arista OS
       connection: network_cli
       import_tasks: playbooks/netconf-backup-asa.yml
       when: platform == 'eos'
@@ -63,6 +68,11 @@
     - name: F5
       import_tasks: playbooks/netconf-backup-f5.yml
       when: platform == 'f5'
+
+    - name: FortiOS
+      connection: local
+      import_tasks: playbooks/netconf-backup-fortios.yml
+      when: platform == 'none'
 
     - name: Push configuration changes to Gogs
       import_tasks: playbooks/netconf-backup-gogs-sync.yml

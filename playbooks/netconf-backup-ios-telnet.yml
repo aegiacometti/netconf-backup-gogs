@@ -1,15 +1,21 @@
-- name: Cisco IOS - show running-config
-  ios_command:
-    commands: 'show running-config'
+- name: Cisco IOS Telnet - show running-config
+  telnet:
+    login_prompt: "Username: "
+    prompts:
+      - "[>#]"
+    command:
+      - terminal length 0
+      - show running-config
   register: output
   ignore_errors: yes
 
-- name: Cisco IOS - Save the output
+- name: Cisco IOS Telnet - Save the output
   vars:
-    clean_config: "{{ output.stdout[0]|clean_config(clean_patterns) }}"
+    clean_config: "{{ output.output[1]|clean_config(clean_patterns) }}"
   local_action: copy content={{clean_config}} dest={{backup_dir}}/{{file_name}}
+  ignore_errors: yes
 
-- name: Cisco IOS - Process the file
+- name: Cisco IOS Telnet - Process the file
   command:
     argv:
       - python3
@@ -21,17 +27,18 @@
       - "{{ historic_files_to_keep }}"
   delegate_to: localhost
   when: output.failed == false
+  ignore_errors: yes
 
-- name: Cisco IOS - Send Mail alert if host backup failed
+- name: Cisco IOS Telnet - Send Mail alert if host backup failed
   vars:
-    os: "Cisco IOS"
+    os: "Cisco IOS Telnet"
     step: "fail"
   import_tasks: netconf-backup-send-mail.yml
   when: output.failed == true and alert_mail == "yes"
 
-- name: Cisco IOS - Send Slack alert if host backup failed
+- name: Cisco IOS Telnet - Send Slack alert if host backup failed
   vars:
-    os: "Cisco IOS"
+    os: "Cisco IOS Telnet"
     step: "fail"
   import_tasks: netconf-backup-msg-slack.yml
   when: output.failed == true and alert_slack == "yes"

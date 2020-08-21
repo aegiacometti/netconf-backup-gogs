@@ -1,4 +1,4 @@
-# Simple Git GUI network configuration backup with alerts for Cisco IOS, NxOS, ASA, Arista and F5
+# Simple Git GUI network configuration backup with alerts for Cisco IOS, NxOS, ASA, Arista OS, FortiOS and F5
 
 Complete network backup setup with Ansible, Python3, Gogs (local GitHub like GUI), and alerts via Slack and/or eMail.
  
@@ -27,6 +27,7 @@ Check the short video<br/>
 - Python3
 - Docker
 - Gogs on Docker
+- pyFG (if using FortiOS)
 
 ## Setup
 - Customize the ``hosts`` file according to your needs. *(Sample file provided)*.
@@ -84,7 +85,8 @@ for everydayexecution at 2 AM.
 - If you want to integrate the messages from Gogs into Slack:
     - Get the webhook from Slack, and from the channel you want to publish the changes
     - Go to your repo in Gogs, then Setting->WebHook and add new webhook
-    
+
+- If you are going to backup FortiOS, you have to enable SCP with `config system global set admin-scp enable end`
 
 ### Special SSH connectivity notes
 

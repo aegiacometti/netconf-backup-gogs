@@ -49,6 +49,7 @@
       - "{{ historic_files_to_keep }}"
   delegate_to: localhost
   when: output_save.failed == false and output_create.failed == false and output_download.failed == false
+  ignore_errors: yes
 
 - name: F5 - Send Mail alert if host backup failed
   vars:

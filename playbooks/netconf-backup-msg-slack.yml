@@ -4,6 +4,7 @@
     msg: '`Configuration backup failed on host "{{ inventory_hostname }}"`'
   delegate_to: localhost
   when: step == "fail"
+  ignore_errors: yes
 
 - name: Slack Message - Network configuration backup finished
   slack:

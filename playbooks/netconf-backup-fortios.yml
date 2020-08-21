@@ -1,16 +1,21 @@
-- name: Cisco ASA - show running-config
-  asa_command:
-    commands: 'show running-config'
+- name: FortiOS - get running-config
+  fortios_config:
+    host: '10.100.14.2'
+    username: 'cisco'
+    password: 'cisco'
+    backup: yes
+    backup_path: "{{backup_dir}}"
+    backup_filename: "{{file_name}}"
   register: output
   ignore_errors: yes
 
-- name: Cisco ASA - Save the output
+- name: FortiOS - Save the output
   vars:
     clean_config: "{{ output.stdout[0]|clean_config(clean_patterns) }}"
   local_action: copy content={{clean_config}} dest={{backup_dir}}/{{file_name}}
   ignore_errors: yes
 
-- name: Cisco ASA - Process the file
+- name: FortiOS - Process the file
   command:
     argv:
       - python3
@@ -21,19 +26,19 @@
       - "{{ keep_local_history }}"
       - "{{ historic_files_to_keep }}"
   delegate_to: localhost
-  when: output.failed == false
+#  when: output.failed == false
   ignore_errors: yes
 
-- name: Cisco ASA - Send Mail alert if host backup failed
+- name: FortiOS - Send Mail alert if host backup failed
   vars:
-    os: "Cisco ASA"
-    partial: "yes"
+    os: "FortiOS"
+    step: "fail"
   import_tasks: netconf-backup-send-mail.yml
   when: output.failed == true and alert_mail == "yes"
 
-- name: Cisco IOS - Send Slack alert if host backup failed
+- name: FortiOS - Send Slack alert if host backup failed
   vars:
-    os: "Cisco ASA"
-    partial: "yes"
+    os: "FortiOS"
+    step: "fail"
   import_tasks: netconf-backup-msg-slack.yml
   when: output.failed == true and alert_slack == "yes"
