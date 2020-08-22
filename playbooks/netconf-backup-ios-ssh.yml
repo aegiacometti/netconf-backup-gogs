@@ -8,6 +8,7 @@
   vars:
     clean_config: "{{ output.stdout[0]|clean_config(clean_patterns) }}"
   local_action: copy content={{clean_config}} dest={{backup_dir}}/{{file_name}}
+  when: output.failed == false
   ignore_errors: yes
 
 - name: Cisco IOS SSH - Process the file

@@ -8,6 +8,7 @@
   vars:
     clean_config: "{{ output.stdout[0]|clean_config(clean_patterns) }}"
   local_action: copy content={{clean_config}} dest={{backup_dir}}/{{file_name}}
+  when: output.failed == false
   ignore_errors: yes
 
 - name: Arista - Process the file
@@ -34,6 +35,6 @@
 - name: Arista - Send Slack alert if host backup failed
   vars:
     os: "Arista"
-    partial: "yes"
+    step: "fail"
   import_tasks: netconf-backup-msg-slack.yml
   when: output.failed == true and alert_slack == "yes"
