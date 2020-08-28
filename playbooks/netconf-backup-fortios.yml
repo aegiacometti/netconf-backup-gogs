@@ -1,19 +1,15 @@
-- name: FortiOS - get running-config
-  fortios_config:
-    host: '10.100.14.2'
-    username: 'cisco'
-    password: 'cisco'
-    backup: yes
-    backup_path: "{{backup_dir}}"
-    backup_filename: "{{file_name}}"
-  register: output
-  ignore_errors: yes
-
-- name: FortiOS - Save the output
-  vars:
-    clean_config: "{{ output.stdout[0]|clean_config(clean_patterns) }}"
-  local_action: copy content={{clean_config}} dest={{backup_dir}}/{{file_name}}
-  when: output.failed == false
+- name: FortiOS SCP - Get config
+  command:
+    argv:
+      - python3
+      - scripts/get-FortiOS-Config.py
+      - "{{ ansible_host }}"
+      - "{{ ansible_user }}"
+      - "{{ ansible_password}}"
+      - "{{ file_name }}"
+      - "{{ backup_dir }}"
+  delegate_to: localhost
+  register: output_fortios
   ignore_errors: yes
 
 - name: FortiOS - Process the file
@@ -27,7 +23,7 @@
       - "{{ keep_local_history }}"
       - "{{ historic_files_to_keep }}"
   delegate_to: localhost
-  when: output.failed == false
+  when: output_fortios.stdout == "ok"
   ignore_errors: yes
 
 - name: FortiOS - Send Mail alert if host backup failed
@@ -35,11 +31,11 @@
     os: "FortiOS"
     step: "fail"
   import_tasks: netconf-backup-send-mail.yml
-  when: output.failed == true and alert_mail == "yes"
+  when: output_fortios.stdout != "ok" and alert_mail == "yes"
 
 - name: FortiOS - Send Slack alert if host backup failed
   vars:
     os: "FortiOS"
     step: "fail"
   import_tasks: netconf-backup-msg-slack.yml
-  when: output.failed == true and alert_slack == "yes"
+  when: output_fortios.stdout != "ok" and alert_slack == "yes"

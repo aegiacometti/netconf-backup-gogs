@@ -70,9 +70,8 @@
       when: platform == 'f5'
 
     - name: FortiOS
-      connection: local
       import_tasks: playbooks/netconf-backup-fortios.yml
-      when: platform == 'none'
+      when: platform == 'fortios'
 
     - name: Push configuration changes to Gogs
       import_tasks: playbooks/netconf-backup-gogs-sync.yml

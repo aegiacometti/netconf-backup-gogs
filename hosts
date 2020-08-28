@@ -27,6 +27,7 @@ hq-nx ansible_host=10.100.13.2 ansible_network_os=nxos platform=nxos
 
 [firewall]
 vpn-bkp ansible_host=10.100.10.1 ansible_network_os=asa platform=asa
+forti-test ansible_host=10.100.14.2 ansible_network_os=fortios platform=fortios
 
 [f5]
 f5-bigip ansible_host=10.100.201.51 platform=f5
