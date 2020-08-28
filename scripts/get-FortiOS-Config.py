@@ -38,13 +38,20 @@ def backup_config(ip, username, password, full, path):
                 config = 'fgt_config'
             else:
                 config = 'sys_config'
-            scp.get(config, path)
+
+            try:
+                scp.get(config, path)
+
+            except Exception as e:
+                return str(e)
+
+            else:
+                pass
 
         return "ok"
 
 
 if __name__ == '__main__':
-
     result = backup_config(ip_address, user, passwd, full_backup, backup_dir + "/" + filename)
     print(result)
 
