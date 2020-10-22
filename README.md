@@ -31,7 +31,13 @@ Check the short video<br/>
 
 ## Setup
 - Customize the ``hosts`` file according to your needs. *(Sample file provided)*.
+
 Pay special attention to setup the ``platform=xxx`` value of each host.
+
+According the groups you defined in the ``hosts`` file, create files with the exact name at the directory ``./group_vars``. *(Sample file provided)*.
+
+Inside those file specify your devices credentials.
+
 - Customize the credentials, mail, and Slack details in the files located at ``group_vars`` directory 
 - If you will use Gogs:
     - Deploy the docker version of Gogs in a couple of minutes:
